@@ -6,12 +6,13 @@ one-command VAPT reporting.
 Most scanners produce a flat list of findings. Real compromises rarely come
 from one big vulnerability - they come from several moderate weaknesses that
 feed each other. VulnChain assesses a target inside a strict authorized scope,
-then **links related findings into attack chains** and re-rates the combined
-risk, so a "medium" directory listing plus a "high" credential leak plus a
-login panel is reported as what it actually is: a critical, provable path in.
+then **links related findings into attack chains** and reports them together, so a "medium" directory listing plus a "high" credential leak plus a
+login panel is shown as what it actually is: one provable path in. The chain's severity is the strongest demonstrated impact in it (no automatic amplification).
 
 Everything ships with a **local demo lab** so the whole pipeline, including a
 verified credential-to-admin chain, runs against 127.0.0.1 with zero risk.
+
+![VulnChain pipeline](docs/images/vulnchain-pipeline.png)
 
 ## Features
 
@@ -49,10 +50,12 @@ python3 lab/vulnerable_app.py 8899 &        # deliberately vulnerable, loopback 
 python3 -m vulnchain --scope scope.example.json --out reports/
 ```
 
-Open `reports/vapt-report.html`. You get findings across severity levels and
-one **verified critical chain**: directory listing -> leaked `config.bak`
+Open `reports/vapt-report.html` (excerpt below). You get findings across severity levels and
+one **verified high-severity chain**: directory listing -> leaked `config.bak`
 credentials -> `/admin` panel -> session-proven admin access (wrong-credential
 and anonymous-access controls checked first).
+
+![Excerpt of the generated VAPT report from the local lab](docs/images/vulnchain-report.png)
 
 Run the tests:
 
@@ -82,9 +85,9 @@ be used against real hosts.
 
 See [METHODOLOGY.md](METHODOLOGY.md). Phases: scope validation, discovery,
 reconnaissance, enumeration, TLS review, optional lab-only verification,
-chain correlation, reporting. Scoring uses CVSS 3.1 base metrics as static
-estimates; chain severity reflects combined risk, mirroring how real reports
-distinguish standalone severity from chained impact.
+chain correlation, reporting. Findings carry an internal qualitative severity and are not CVSS-scored (a CVSS 3.1
+calculator ships for the tester to score a demonstrated impact); chain severity equals the strongest demonstrated impact in the chain, so
+standalone severity and chained impact stay visibly separate.
 
 ## Honest limitations
 
