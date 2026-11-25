@@ -1,0 +1,7 @@
+{
+  "name": "vulnchain-demo-lab",
+  "allowed_hosts": ["127.0.0.1"],
+  "allowed_ports": [8899],
+  "verify_credentials": true,
+  "max_requests_per_host": 200
+}
